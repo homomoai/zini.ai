@@ -37,7 +37,7 @@
         }
         body.light #welcome .hello { color: #13131a; }
         body.light .welcome-logo circle { fill: #13131a; filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.2)); }
-        html, body { height: 100%; }
+        html, body { height: 100%; overflow-x: hidden; width: 100%; }
         body { background: var(--bg); color: var(--text); font-family: var(--font); overflow: hidden; display: flex; transition: background var(--transition); }
 
         ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; }
@@ -106,7 +106,7 @@
 
         #apiKeyBtn .badge { font-size: 11px; background: var(--accent-dim); color: var(--accent); padding: 4px 10px; border-radius: 20px; font-weight: 600; letter-spacing: 0.3px; max-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        #main { flex: 1; display: flex; flex-direction: column; height: 100%; position: relative; background: var(--bg); transition: background var(--transition); }
+        #main { flex: 1; min-width: 0; display: flex; flex-direction: column; height: 100%; position: relative; background: var(--bg); overflow-x: hidden; transition: background var(--transition); }
 
         header {
             display: flex; align-items: center; justify-content: space-between;
@@ -118,7 +118,7 @@
         .icon-btn:hover { background: var(--surface-hover); color: var(--text); } .icon-btn:active { transform: scale(0.92); }
         .header-title { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
-        #chatArea { flex: 1; overflow-y: auto; padding: calc(60px + env(safe-area-inset-top)) 16px 16px 16px; display: flex; flex-direction: column; scroll-behavior: smooth; position: relative; }
+        #chatArea { flex: 1; min-width: 0; overflow-y: auto; overflow-x: hidden; padding: calc(60px + env(safe-area-inset-top)) 16px 16px 16px; display: flex; flex-direction: column; scroll-behavior: smooth; position: relative; }
 
         #welcome { margin-top: 4vh; animation: fadeUp 0.6s ease; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
@@ -134,23 +134,23 @@
         .prompt-btn { display: flex; align-items: center; width: 100%; text-align: left; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); color: var(--text-secondary); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 14px; margin-bottom: 8px; cursor: pointer; transition: background var(--transition), border var(--transition), color var(--transition); font-family: var(--font); font-weight: 500; }
         .prompt-btn:hover { background: var(--surface-hover); color: var(--text); } .prompt-btn:active { transform: scale(0.98); }
 
-        #messages { display: flex; flex-direction: column; }
-        .msg-row { display: flex; margin-bottom: 12px; animation: msgIn 0.3s ease; position: relative; touch-action: pan-y; cursor: default; width: 100%; }
-        @keyframes msgIn { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        #messages { display: flex; flex-direction: column; min-width: 0; }
+        .msg-row { display: flex; margin-bottom: 12px; animation: msgIn 0.38s cubic-bezier(0.34, 1.35, 0.64, 1) backwards; position: relative; touch-action: pan-y; cursor: default; width: 100%; min-width: 0; }
+        @keyframes msgIn { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
         
         .msg-row.user { justify-content: flex-end; } 
         .msg-row.assistant { justify-content: flex-start; }
         
         /* 🔥 FULL WIDTH FOR AI, BUBBLE FOR USER */
-        .bubble-wrapper { display: flex; flex-direction: column; position: relative; width: 100%; }
+        .bubble-wrapper { display: flex; flex-direction: column; position: relative; width: 100%; min-width: 0; }
         .msg-row.user .bubble-wrapper { align-items: flex-end; max-width: 82%; }
         /* AI Response takes 100% of the chat area, no right margin */
-        .msg-row.assistant .bubble-wrapper { align-items: flex-start; max-width: 100%; width: 100%; }
+        .msg-row.assistant .bubble-wrapper { align-items: flex-start; max-width: 100%; width: 100%; min-width: 0; }
 
         .bubble { 
             font-size: 14.5px; line-height: 1.5; 
             white-space: pre-wrap; word-wrap: break-word; position: relative;
-            width: fit-content; 
+            width: fit-content; max-width: 100%; min-width: 0;
         }
         
         .msg-row.user .bubble { 
@@ -158,7 +158,9 @@
             background: var(--gradient); color: #fff; border-bottom-right-radius: 4px; 
             box-shadow: 0 4px 16px rgba(108, 140, 255, 0.25); 
             user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; 
+            transition: transform 0.15s ease;
         }
+        .msg-row.user .bubble:active { transform: scale(0.98); }
         
         /* Professional Full-width AI Response Styling */
         .msg-row.assistant .bubble { 
@@ -178,7 +180,7 @@
         .bubble blockquote {
             position: relative; border-left: 3px solid rgba(255, 255, 255, 0.6); padding: 4px 8px; margin: 0 0 6px 0;
             background: rgba(0, 0, 0, 0.15); border-radius: 4px; max-height: 42px; overflow: hidden; display: flex; flex-direction: column;
-            width: fit-content;
+            width: auto; max-width: 100%; min-width: 0; overflow-wrap: anywhere; word-break: break-word;
         }
         .bubble blockquote * { font-size: 12px !important; line-height: 1.2 !important; margin: 0 !important; padding: 0 !important; color: rgba(255, 255, 255, 0.85) !important; font-weight: normal !important; }
         .bubble blockquote p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
@@ -195,11 +197,38 @@
         .msg-row.user .bubble th, .msg-row.user .bubble td { border-color: rgba(255, 255, 255, 0.2); color: #fff; }
         .msg-row.user .bubble th { background: rgba(0, 0, 0, 0.2); }
 
-        .code-block { position: relative; background: var(--bg-secondary); border-radius: var(--radius-sm); padding: 16px 18px; margin: 8px 0; border: 1px solid var(--border); overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; color: var(--text); line-height: 1.7; width: 100%; }
-        .code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
-        .code-block code { background: transparent !important; padding: 0 !important; color: var(--text) !important; font-size: inherit !important; }
-        .code-block .copy-code-btn { position: absolute; top: 6px; right: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); padding: 3px 10px; font-size: 12px; cursor: pointer; transition: background var(--transition), color var(--transition); font-family: var(--font); font-weight: 500; z-index: 2; }
-        .code-block .copy-code-btn:hover { background: var(--surface-hover); color: var(--text); }
+        .code-block { position: relative; background: #0d1117; border-radius: var(--radius-sm); margin: 8px 0; border: 1px solid var(--border); overflow: hidden; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; width: 100%; max-width: 100%; min-width: 0; }
+        body.light .code-block { background: #1e1e2e; }
+        .code-block-bar { display: flex; align-items: center; justify-content: space-between; padding: 7px 10px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .code-lang { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); font-family: var(--font); }
+        .code-block-actions { display: flex; align-items: center; gap: 4px; }
+        .code-icon-btn { background: none; border: none; color: var(--text-secondary); padding: 5px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background var(--transition), color var(--transition); }
+        .code-icon-btn svg { width: 14px; height: 14px; }
+        .code-icon-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+        .code-block > pre { margin: 0; padding: 14px 16px; max-height: 220px; max-width: 100%; overflow: auto; white-space: pre; }
+        .code-block code { background: transparent !important; padding: 0 !important; color: #e6e6f0 !important; font-size: 12.5px !important; line-height: 1.65; }
+
+        /* Code preview dialog — expand opens a fixed overlay, never stretches the page/sandbox width */
+        #codePreviewModal {
+            position: fixed; inset: 0; z-index: 400; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            display: none; align-items: center; justify-content: center; padding: 18px; padding-top: calc(18px + env(safe-area-inset-top)); padding-bottom: calc(18px + env(safe-area-inset-bottom));
+            opacity: 0; transition: opacity 0.2s ease;
+        }
+        #codePreviewModal.open { display: flex; opacity: 1; }
+        .code-preview-box {
+            width: 100%; max-width: 720px; height: 100%; max-height: 88vh; background: #0d1117; border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden;
+            transform: scale(0.96) translateY(8px); transition: transform 0.2s ease;
+        }
+        #codePreviewModal.open .code-preview-box { transform: scale(1) translateY(0); }
+        body.light .code-preview-box { background: #1e1e2e; }
+        .code-preview-bar { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; }
+        .code-preview-bar .code-lang { font-size: 12px; }
+        .code-preview-actions { display: flex; align-items: center; gap: 4px; }
+        .code-preview-pre { flex: 1; overflow: auto; margin: 0; padding: 16px; white-space: pre; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+        .code-preview-pre code { background: transparent !important; padding: 0 !important; color: #e6e6f0 !important; line-height: 1.7; }
+        .tok-kw { color: #ff7ab2; } .tok-str { color: #a5e075; } .tok-com { color: #6a7280; font-style: italic; }
+        .tok-num { color: #f0b464; } .tok-fn { color: #82aaff; } .tok-tag { color: #ff7ab2; }
 
         .msg-actions { display: flex; gap: 12px; margin-top: 8px; padding: 4px 0; opacity: 0.85; transition: opacity var(--transition); }
         .msg-row.assistant .msg-actions { display: flex; margin-left: -4px; /* aligned to text left */ }
@@ -243,6 +272,8 @@
             80% { transform: rotate(315deg); }
             100% { transform: rotate(315deg); }
         }
+        .orbit-dot { animation: dotPulse 1.0s ease-in-out infinite; transform-origin: center; }
+        @keyframes dotPulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
 
         #inputBar { 
             display: flex; flex-direction: column; gap: 8px; padding: 8px 12px calc(12px + env(safe-area-inset-bottom)) 12px; 
@@ -261,22 +292,70 @@
         #replyBar .cancel-reply { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; padding: 4px; line-height: 1; border-radius: 6px; transition: background var(--transition); }
         #replyBar .cancel-reply:hover { background: var(--surface-hover); color: var(--text); }
 
+        #inputRow { display: flex; align-items: flex-end; gap: 8px; width: 100%; }
         #inputWrap { 
             flex: 1; position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; 
-            padding: 4px 6px 4px 16px; display: flex; align-items: flex-end; width: 100%; transition: border var(--transition), box-shadow var(--transition);
+            padding: 4px 6px 4px 14px; display: flex; align-items: flex-end; width: 100%; transition: border var(--transition), box-shadow var(--transition);
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
         #inputWrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
+        /* Premium standalone attach button — gradient ring so it reads as a distinct, elevated control */
+        #attachBtn {
+            width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
+            position: relative; display: flex; align-items: center; justify-content: center;
+            background: var(--surface); border: none; color: var(--accent);
+            transition: transform 0.15s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.12), inset 0 0 0 1.5px transparent;
+        }
+        #attachBtn::before {
+            content: ""; position: absolute; inset: 0; border-radius: 50%; padding: 1.5px;
+            background: var(--gradient); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+        }
+        #attachBtn::after {
+            content: ""; position: absolute; inset: -3px; border-radius: 50%;
+            box-shadow: 0 0 0 1px var(--accent-glow); opacity: 0.7; pointer-events: none;
+        }
+        #attachBtn:hover { box-shadow: 0 4px 16px var(--accent-glow); }
+        #attachBtn:active { transform: scale(0.9); }
+        #attachBtn svg { width: 19px; height: 19px; position: relative; z-index: 1; }
+        #attachPreview { display: none; gap: 8px; padding: 2px 4px; overflow-x: auto; }
+        #attachPreview.show { display: flex; }
+        .attach-chip { position: relative; flex-shrink: 0; width: 56px; height: 56px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); }
+        .attach-chip img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .attach-chip .file-chip { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 3px; }
+        .attach-chip .file-chip svg { width: 18px; height: 18px; color: var(--accent); }
+        .attach-chip .file-chip span { font-size: 8px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 48px; }
+        .attach-chip .remove-chip { position: absolute; top: 2px; right: 2px; width: 16px; height: 16px; border-radius: 50%; background: rgba(0,0,0,0.65); color: #fff; border: none; font-size: 11px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
         #userInput { 
             flex: 1; background: transparent; border: none; color: var(--text); padding: 10px 8px 10px 0; font-size: 14.5px; resize: none; 
             max-height: 120px; outline: none; font-family: var(--font); line-height: 1.5; min-height: 42px; 
         }
         #userInput::placeholder { color: var(--text-muted); }
+        /* Same footprint AND same premium ring treatment as #attachBtn so both controls match */
         #sendBtn { 
-            width: 36px; height: 36px; border-radius: 50%; background: var(--gradient); color: #fff; border: none; display: flex; align-items: center; justify-content: center; 
-            font-size: 18px; cursor: pointer; flex-shrink: 0; margin-bottom: 3px; transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 8px var(--accent-glow); 
+            width: 44px; height: 44px; border-radius: 50%; background: var(--gradient); color: #fff; border: none; display: flex; align-items: center; justify-content: center; 
+            font-size: 18px; cursor: pointer; flex-shrink: 0; position: relative; transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 10px var(--accent-glow); 
         }
-        #sendBtn:active { transform: scale(0.88); } #sendBtn:disabled { opacity: 0.35; box-shadow: none; cursor: not-allowed; } #sendBtn:not(:disabled):hover { box-shadow: 0 4px 16px var(--accent-glow); }
+        #sendBtn::before {
+            content: ""; position: absolute; inset: 0; border-radius: 50%; padding: 1.5px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.15));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+        }
+        #sendBtn::after {
+            content: ""; position: absolute; inset: -3px; border-radius: 50%;
+            box-shadow: 0 0 0 1px var(--accent-glow); opacity: 0.7; pointer-events: none;
+        }
+        #sendBtn > * { position: relative; z-index: 1; }
+        #sendBtn:active { transform: scale(0.9); } #sendBtn:disabled { opacity: 0.35; box-shadow: none; cursor: not-allowed; } #sendBtn:not(:disabled):hover { box-shadow: 0 4px 16px var(--accent-glow); }
+        #sendBtn .arrow-icon { font-size: 19px; line-height: 1; }
+        #sendBtn.stop-mode { background: var(--surface); border: none; box-shadow: none; opacity: 1; cursor: pointer; }
+        #sendBtn.stop-mode::before { background: var(--gradient); }
+        #sendBtn.stop-mode:disabled { opacity: 1; cursor: pointer; }
+        #sendBtn .stop-icon { width: 13px; height: 13px; background: var(--text); border-radius: 3px; display: none; }
+        #sendBtn.stop-mode .stop-icon { display: block; }
+        #sendBtn.stop-mode .arrow-icon { display: none; }
 
         #scrollToBottom {
             position: fixed; bottom: 100px; right: 20px; width: 48px; height: 48px; border-radius: 50%;
@@ -287,6 +366,56 @@
         #scrollToBottom:hover { background: var(--surface-hover); color: var(--text); } #scrollToBottom:active { transform: scale(0.9); }
 
         #apiModal { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+
+        #imgEditModal {
+            position: fixed; inset: 0; z-index: 300; background: #05050a; display: none; flex-direction: column;
+            padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
+        }
+        #imgEditModal.open { display: flex; }
+        .img-edit-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; flex-shrink: 0; }
+        .img-edit-header .icon-btn { color: #fff; }
+        .img-edit-header .icon-btn:hover { background: rgba(255,255,255,0.1); }
+        #imgEditCount { color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500; }
+        #imgEditCanvasWrap { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: none; position: relative; }
+        #imgEditCanvas { max-width: 100%; max-height: 100%; touch-action: none; border-radius: 8px; box-shadow: 0 8px 40px rgba(0,0,0,0.5); }
+        .img-edit-toolbar { flex-shrink: 0; padding: 12px 14px calc(14px + env(safe-area-inset-bottom)) 14px; display: flex; flex-direction: column; gap: 12px; }
+        .img-edit-tools { display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .tool-btn { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s, color 0.2s; }
+        .tool-btn svg { width: 20px; height: 20px; }
+        .tool-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .color-swatches { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .swatch { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; box-shadow: 0 0 0 1px rgba(255,255,255,0.15); transition: transform 0.15s ease; }
+        .swatch.active { border-color: #fff; transform: scale(1.15); }
+        #imgEditDone { background: var(--gradient); color: #fff; border: none; border-radius: 24px; padding: 13px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; box-shadow: 0 4px 16px var(--accent-glow); }
+        #imgEditDone:active { transform: scale(0.98); }
+
+        /* Brush size control */
+        .brush-size-row { display: none; align-items: center; gap: 10px; padding: 0 6px; color: rgba(255,255,255,0.55); }
+        .brush-size-row.show { display: flex; }
+        .brush-size-row input[type="range"] { flex: 1; accent-color: var(--accent); height: 4px; }
+        #brushSizeVal { font-size: 12px; color: rgba(255,255,255,0.7); width: 22px; text-align: right; flex-shrink: 0; }
+
+        /* Crop tool */
+        #cropOverlay {
+            position: absolute; display: none; border: 2px dashed #fff; box-shadow: 0 0 0 2000px rgba(0,0,0,0.55);
+            touch-action: none; cursor: move;
+        }
+        #cropOverlay.show { display: block; }
+        .crop-handle {
+            position: absolute; width: 22px; height: 22px; margin: -11px; border-radius: 50%;
+            background: var(--accent); border: 2px solid #fff; touch-action: none;
+        }
+        .crop-handle[data-corner="tl"] { top: 0; left: 0; cursor: nwse-resize; }
+        .crop-handle[data-corner="tr"] { top: 0; right: 0; margin-right: -11px; cursor: nesw-resize; }
+        .crop-handle[data-corner="bl"] { bottom: 0; left: 0; margin-bottom: -11px; cursor: nesw-resize; }
+        .crop-handle[data-corner="br"] { bottom: 0; right: 0; margin-right: -11px; margin-bottom: -11px; cursor: nwse-resize; }
+        .crop-apply-row { display: none; align-items: center; justify-content: center; gap: 10px; }
+        .crop-apply-row.show { display: flex; }
+        .crop-apply-row button { border: none; border-radius: 20px; padding: 11px 18px; font-size: 14px; font-weight: 600; cursor: pointer; flex: 1; }
+        .crop-cancel-btn { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
+        .crop-apply-btn { background: var(--gradient); color: #fff; box-shadow: 0 4px 16px var(--accent-glow); }
+        .crop-apply-row button:active { transform: scale(0.97); }
+        .text-input-overlay { position: absolute; background: transparent; border: 1px dashed rgba(255,255,255,0.5); outline: none; font-family: var(--font); resize: none; padding: 2px 4px; min-width: 40px; }
         #apiModal.open { opacity: 1; pointer-events: auto; }
         
         #apiModal .modal-box { 
@@ -449,6 +578,8 @@
                     <div class="dropdown-option" data-val="sarvam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> Sarvam AI</div>
                     <div class="dropdown-option" data-val="mistral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> Mistral AI</div>
                     <div class="dropdown-option" data-val="groq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Groq</div>
+                    <div class="dropdown-option" data-val="openrouter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"></circle><path d="M12 2v5m0 10v5M4.2 4.2l3.5 3.5m8.6 8.6l3.5 3.5M2 12h5m10 0h5M4.2 19.8l3.5-3.5m8.6-8.6l3.5-3.5"></path></svg> OpenRouter</div>
+                    <div class="dropdown-option" data-val="gemini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 L14.5 9.5 L22 12 L14.5 14.5 L12 22 L9.5 14.5 L2 12 L9.5 9.5 Z"></path></svg> Gemini</div>
                 </div>
             </div>
 
@@ -463,28 +594,17 @@
                 <span class="dot inactive" id="detectedDot"></span>
                 <span id="detectedLabel">Waiting for key…</span>
             </div>
+            <div style="display:flex; align-items:center; gap:6px; margin-top:8px; font-size:11.5px; color:var(--text-muted);">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span>Stored only on this device — never sent to our servers.</span>
+            </div>
 
             <div class="instruction-box">
-                <h4>How to chat with Zini AI – Step by Step</h4>
-                
-                <div class="video-wrapper">
-                    <iframe src="https://www.youtube.com/embed/CbMOhTMeMkA" title="YouTube Short Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <h4>New here?</h4>
+                <div style="text-align: center;">
+                    <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin-bottom: 12px;">Watch this video to understand how you can chat with Zini AI.</p>
+                    <a href="https://youtube.com/shorts/CbMOhTMeMkA" target="_blank" style="color: var(--accent); font-size: 13px; text-decoration: none; font-weight: 500;">🎥 Watch on YouTube ↗</a>
                 </div>
-                
-                <div style="text-align: center; margin-top: -10px; margin-bottom: 12px;">
-                    <a href="https://youtube.com/shorts/CbMOhTMeMkA" target="_blank" style="color: var(--accent); font-size: 13px; text-decoration: none; font-weight: 500;">🎥 Watch on YouTube App ↗</a>
-                </div>
-
-                <ol>
-                    <li>Open any browser on your phone (like Chrome).</li>
-                    <li>In the search bar, type: <strong>groq cloud</strong></li>
-                    <li>Click on the first result (the official Groq Cloud website).</li>
-                    <li>Tap on "Sign in" or "Get Started". Log in with your Google account.</li>
-                    <li>In the top right corner, tap the button with three icons.</li>
-                    <li>Go to API Keys. Tap Create new API key. Give it a name: <strong>zini ai</strong>. Then create it.</li>
-                    <li>Copy the long API key that appears.</li>
-                    <li>Open the Zini AI app. Paste the API key there.</li>
-                </ol>
             </div>
 
             <button class="close-modal" id="apiModalClose">Cancel</button>
@@ -503,6 +623,62 @@
         <div class="menu-item" id="menuRetry">
             <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
             Retry
+        </div>
+    </div>
+
+    <div id="imgEditModal">
+        <div class="img-edit-header">
+            <button class="icon-btn" id="imgEditCancel"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            <span id="imgEditCount"></span>
+            <button class="icon-btn" id="imgEditUndo"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg></button>
+        </div>
+        <div id="imgEditCanvasWrap">
+            <canvas id="imgEditCanvas"></canvas>
+            <div id="cropOverlay">
+                <div class="crop-handle" data-corner="tl"></div>
+                <div class="crop-handle" data-corner="tr"></div>
+                <div class="crop-handle" data-corner="bl"></div>
+                <div class="crop-handle" data-corner="br"></div>
+            </div>
+        </div>
+        <div class="img-edit-toolbar">
+            <div class="img-edit-tools">
+                <button class="tool-btn active" data-tool="pen" title="Draw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg></button>
+                <button class="tool-btn" data-tool="text" title="Add text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg></button>
+                <button class="tool-btn" data-tool="crop" title="Crop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"></path><path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"></path></svg></button>
+            </div>
+            <div class="brush-size-row" id="brushSizeRow">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2"></circle></svg>
+                <input type="range" id="brushSizeSlider" min="2" max="28" value="6" step="1" />
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="6"></circle></svg>
+                <span id="brushSizeVal">6</span>
+            </div>
+            <div class="crop-apply-row" id="cropApplyRow">
+                <button class="crop-cancel-btn" id="cropCancelBtn">Cancel</button>
+                <button class="crop-apply-btn" id="cropApplyBtn">Apply Crop</button>
+            </div>
+            <div class="color-swatches" id="colorSwatches">
+                <span class="swatch active" data-color="#ff4757" style="background:#ff4757"></span>
+                <span class="swatch" data-color="#ffd23f" style="background:#ffd23f"></span>
+                <span class="swatch" data-color="#3ddc84" style="background:#3ddc84"></span>
+                <span class="swatch" data-color="#6c8cff" style="background:#6c8cff"></span>
+                <span class="swatch" data-color="#ffffff" style="background:#ffffff"></span>
+                <span class="swatch" data-color="#000000" style="background:#000000"></span>
+            </div>
+            <button id="imgEditDone">Add<span id="imgEditDoneCount"></span></button>
+        </div>
+    </div>
+
+    <div id="codePreviewModal">
+        <div class="code-preview-box">
+            <div class="code-preview-bar">
+                <span class="code-lang" id="codePreviewLang">code</span>
+                <div class="code-preview-actions">
+                    <button class="code-icon-btn" id="codePreviewCopy" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+                    <button class="code-icon-btn" id="codePreviewClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+                </div>
+            </div>
+            <pre class="code-preview-pre"><code id="codePreviewCode"></code></pre>
         </div>
     </div>
 
@@ -547,9 +723,17 @@
                 <button class="cancel-reply" id="cancelReply">✕</button>
             </div>
             
-            <div id="inputWrap">
-                <textarea id="userInput" rows="1" placeholder="Type a message…"></textarea>
-                <button id="sendBtn">↑</button>
+            <div id="attachPreview"></div>
+
+            <div id="inputRow">
+                <input type="file" id="fileInput" accept="image/*" multiple style="display:none" />
+                <button id="attachBtn" title="Add photos">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"></rect><circle cx="9" cy="9" r="1.8" fill="currentColor" stroke="none"></circle><path d="M21 15l-5-5a2 2 0 0 0-2.83 0L4 19"></path></svg>
+                </button>
+                <div id="inputWrap">
+                    <textarea id="userInput" rows="1" placeholder="Type a message…"></textarea>
+                </div>
+                <button id="sendBtn"><span class="arrow-icon">↑</span><span class="stop-icon"></span></button>
             </div>
         </div>
     </div>
@@ -563,6 +747,7 @@
             }
 
             const $ = id => document.getElementById(id);
+            function haptic(ms) { try { if (navigator.vibrate) navigator.vibrate(ms || 10); } catch (_) {} }
             const sidebar = $('sidebar');
             const overlay = $('overlay');
             const chatList = $('chatList');
@@ -571,6 +756,27 @@
             const welcomeEl = $('welcome');
             const userInput = $('userInput');
             const sendBtn = $('sendBtn');
+            const fileInput = $('fileInput');
+            const attachBtn = $('attachBtn');
+            const attachPreview = $('attachPreview');
+            let pendingAttachments = [];
+            const imgEditModal = $('imgEditModal');
+            const imgEditCanvas = $('imgEditCanvas');
+            const imgEditCanvasWrap = $('imgEditCanvasWrap');
+            const imgEditCancel = $('imgEditCancel');
+            const imgEditUndo = $('imgEditUndo');
+            const imgEditDone = $('imgEditDone');
+            const imgEditCount = $('imgEditCount');
+            const imgEditDoneCount = $('imgEditDoneCount');
+            const brushSizeRow = $('brushSizeRow');
+            const brushSizeSlider = $('brushSizeSlider');
+            const brushSizeVal = $('brushSizeVal');
+            const cropOverlay = $('cropOverlay');
+            const cropApplyRow = $('cropApplyRow');
+            const cropApplyBtn = $('cropApplyBtn');
+            const cropCancelBtn = $('cropCancelBtn');
+            const colorSwatchesEl = $('colorSwatches');
+            const colorSwatches = $('colorSwatches');
             const menuBtn = $('menuBtn');
             const closeSidebarBtn = $('closeSidebarBtn');
             const newChatBtn = $('newChatBtn');
@@ -609,11 +815,31 @@
             let isProcessing = false;
             let replyToMessage = null;
             let selectedUserMessage = null;
+            let activeAbortController = null;
+
+            function isNearBottom() {
+                return (chatArea.scrollHeight - chatArea.scrollTop - chatArea.clientHeight) < 120;
+            }
+
+            async function fetchWithRetry(url, opts, retries) {
+                if (retries === undefined) retries = 1;
+                try {
+                    return await fetch(url, opts);
+                } catch (err) {
+                    if (retries > 0 && err.name !== 'AbortError') {
+                        await new Promise(r => setTimeout(r, 700));
+                        return fetchWithRetry(url, opts, retries - 1);
+                    }
+                    throw err;
+                }
+            }
 
             const PROVIDERS = {
                 sarvam: { label: 'Sarvam AI', keyPattern: /^[A-Za-z0-9\-_]+$/, apiBase: 'https://api.sarvam.ai/v1/chat/completions', defaultModel: 'sarvam-30b', headers: (key) => ({ 'api-subscription-key': key, 'Content-Type': 'application/json' }) },
                 mistral: { label: 'Mistral AI', keyPattern: /^[A-Za-z0-9\-_]{32}$/, apiBase: 'https://api.mistral.ai/v1/chat/completions', defaultModel: 'mistral-small-latest', headers: (key) => ({ 'Authorization': 'Bearer ' + key }) },
-                groq: { label: 'Groq', keyPattern: /^gsk_[A-Za-z0-9\-_]+$/, apiBase: 'https://api.groq.com/openai/v1/chat/completions', defaultModel: 'llama-3.3-70b-versatile', headers: (key) => ({ 'Authorization': 'Bearer ' + key }) }
+                groq: { label: 'Groq', keyPattern: /^gsk_[A-Za-z0-9\-_]+$/, apiBase: 'https://api.groq.com/openai/v1/chat/completions', defaultModel: 'llama-3.3-70b-versatile', headers: (key) => ({ 'Authorization': 'Bearer ' + key }) },
+                openrouter: { label: 'OpenRouter', keyPattern: /^sk-or-[A-Za-z0-9\-_]+$/, apiBase: 'https://openrouter.ai/api/v1/chat/completions', defaultModel: 'openrouter/auto', headers: (key) => ({ 'Authorization': 'Bearer ' + key, 'HTTP-Referer': location.origin, 'X-Title': 'ZiNi' }) },
+                gemini: { label: 'Gemini', keyPattern: /^AIza[A-Za-z0-9_\-]{20,}$/, apiBase: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', defaultModel: 'gemini-flash-latest', headers: (key) => ({ 'Authorization': 'Bearer ' + key }) }
             };
 
             dropdownSelected.addEventListener('click', function(e) {
@@ -687,21 +913,32 @@
                         const tempDiv = document.createElement('div');
                         tempDiv.innerHTML = html;
                         tempDiv.querySelectorAll('pre').forEach(pre => {
+                            const codeEl = pre.querySelector('code');
+                            let lang = '';
+                            if (codeEl) {
+                                const m = (codeEl.className || '').match(/language-(\w+)/);
+                                if (m) lang = m[1];
+                                codeEl.innerHTML = highlightCode(codeEl.textContent, lang);
+                            }
                             const wrapper = document.createElement('div');
                             wrapper.className = 'code-block';
                             pre.parentNode.insertBefore(wrapper, pre);
                             wrapper.appendChild(pre);
-                            const btn = document.createElement('button');
-                            btn.className = 'copy-code-btn'; btn.textContent = 'Copy';
-                            btn.onclick = function() { window.copyCodeBlock(this); };
-                            wrapper.appendChild(btn);
+                            wrapper.insertAdjacentHTML('afterbegin',
+                                `<div class="code-block-bar">
+                                    <span class="code-lang">${lang || 'code'}</span>
+                                    <div class="code-block-actions">
+                                        <button class="code-icon-btn expand-code-btn" onclick="window.toggleCodeExpand(this)" title="Expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                                        <button class="code-icon-btn copy-code-btn" onclick="window.copyCodeBlock(this)" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+                                    </div>
+                                </div>`);
                         });
                         return tempDiv.innerHTML;
                     } catch (e) { console.error(e); }
                 }
                 let s = escapeHtml(raw);
                 s = s.replace(/```(\w*)\n?([\s\S]*?)```/g, function(match, lang, code) {
-                    return `<div class="code-block"><pre><code>${code.trim()}</code></pre><button class="copy-code-btn" onclick="window.copyCodeBlock(this)">Copy</button></div>`;
+                    return `<div class="code-block"><div class="code-block-bar"><span class="code-lang">${lang || 'code'}</span><div class="code-block-actions"><button class="code-icon-btn expand-code-btn" onclick="window.toggleCodeExpand(this)" title="Expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button><button class="code-icon-btn copy-code-btn" onclick="window.copyCodeBlock(this)" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button></div></div><pre><code>${highlightCode(code.trim(), lang)}</code></pre></div>`;
                 });
                 s = s.replace(/`([^`]+?)`/g, '<code>$1</code>');
                 s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
@@ -709,27 +946,114 @@
                 return s;
             }
 
+            // Lightweight syntax highlighter — single-pass so tokens never get re-matched by a later pass
+            function highlightCode(code, lang) {
+                const esc = escapeHtml(code);
+                const showTags = ['html', 'xml', 'svg', 'vue'].includes((lang || '').toLowerCase());
+                const kwList = "function|return|const|let|var|if|else|for|while|do|switch|case|break|continue|class|extends|new|this|import|from|export|default|async|await|try|catch|finally|throw|typeof|instanceof|in|of|null|undefined|true|false|void|delete|yield|static|get|set|public|private|protected|interface|implements|enum|type|namespace|def|elif|pass|lambda|with|as|is|not|and|or|None|True|False|self|fn|impl|struct|trait|mut|pub|use|mod|match|package|func|int|string|bool|float|double|char|include|using|template|virtual|override|module|require|echo";
+                const parts = [
+                    `(?<com>\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/|&lt;!--[\\s\\S]*?--&gt;)`,
+                    `(?<str>&quot;.*?&quot;|&#39;.*?&#39;|\`[^\`]*\`)`
+                ];
+                if (showTags) parts.push(`(?<tag>&lt;\\/?[a-zA-Z][\\w-]*)`);
+                parts.push(`(?<num>\\b\\d+\\.?\\d*\\b)`);
+                parts.push(`(?<kw>\\b(?:${kwList})\\b)`);
+                parts.push(`(?<fn>\\b[A-Za-z_$][\\w$]*(?=\\())`);
+                const re = new RegExp(parts.join('|'), 'g');
+                return esc.replace(re, (match, ...rest) => {
+                    const groups = rest[rest.length - 1];
+                    if (groups && groups.com) return `<span class="tok-com">${match}</span>`;
+                    if (groups && groups.str) return `<span class="tok-str">${match}</span>`;
+                    if (groups && groups.tag) return `<span class="tok-tag">${match}</span>`;
+                    if (groups && groups.num) return `<span class="tok-num">${match}</span>`;
+                    if (groups && groups.kw) return `<span class="tok-kw">${match}</span>`;
+                    if (groups && groups.fn) return `<span class="tok-fn">${match}</span>`;
+                    return match;
+                });
+            }
+
             window.copyCodeBlock = function(btn) {
                 const code = btn.closest('.code-block').querySelector('code');
                 if (code) {
-                    if (navigator.clipboard) {
-                        navigator.clipboard.writeText(code.textContent).then(() => {
-                            const orig = btn.textContent; btn.textContent = '✓'; setTimeout(() => btn.textContent = orig, 1500);
-                        }).catch(() => fallbackCopyText(code.textContent));
-                    } else fallbackCopyText(code.textContent);
+                    const text = code.textContent;
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(() => flashCopied(btn)).catch(() => fallbackCopyText(text, btn));
+                    } else fallbackCopyText(text, btn);
                 }
             };
+            function flashCopied(btn) {
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                setTimeout(() => btn.innerHTML = orig, 1300);
+            }
+            const codePreviewModal = $('codePreviewModal');
+            const codePreviewLang = $('codePreviewLang');
+            const codePreviewCode = $('codePreviewCode');
+            const codePreviewCopy = $('codePreviewCopy');
+            const codePreviewClose = $('codePreviewClose');
+
+            // Expand button opens a fixed-position preview dialog — it never resizes the
+            // chat/code-block container itself, so no layout/width glitch in the page.
+            window.toggleCodeExpand = function(btn) {
+                const block = btn.closest('.code-block');
+                const codeEl = block.querySelector('code');
+                const langEl = block.querySelector('.code-lang');
+                if (!codeEl) return;
+                codePreviewLang.textContent = (langEl && langEl.textContent) || 'code';
+                codePreviewCode.innerHTML = codeEl.innerHTML;
+                codePreviewModal.classList.add('open');
+                haptic(6);
+                window.history.pushState({ modal: 'codePreview' }, '');
+            };
+
+            function closeCodePreview(skipHistoryBack) {
+                codePreviewModal.classList.remove('open');
+                if (!skipHistoryBack && window.history.state && window.history.state.modal === 'codePreview') window.history.back();
+            }
+            codePreviewClose.onclick = () => closeCodePreview(false);
+            codePreviewModal.addEventListener('click', (e) => { if (e.target === codePreviewModal) closeCodePreview(false); });
+            codePreviewCopy.onclick = () => {
+                const text = codePreviewCode.textContent;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(() => flashCopied(codePreviewCopy)).catch(() => fallbackCopyText(text, codePreviewCopy));
+                } else fallbackCopyText(text, codePreviewCopy);
+            };
+
+            function toPlainText(md) {
+                if (!md) return '';
+                let s = md;
+                s = s.replace(/```[\s\S]*?```/g, m => m.replace(/```(\w*)\n?/g, '').replace(/```/g, '').trim());
+                s = s.replace(/^\s{0,3}#{1,6}\s+/gm, '');
+                s = s.replace(/\*\*\*(.+?)\*\*\*/g, '$1');
+                s = s.replace(/\*\*(.+?)\*\*/g, '$1');
+                s = s.replace(/(^|[^*])\*(?!\*)([^*\n]+?)\*(?!\*)/g, '$1$2');
+                s = s.replace(/__(.+?)__/g, '$1');
+                s = s.replace(/(^|[^_])_(?!_)([^_\n]+?)_(?!_)/g, '$1$2');
+                s = s.replace(/`([^`]+)`/g, '$1');
+                s = s.replace(/^\s*[-*+]\s+/gm, '• ');
+                s = s.replace(/^\s*>\s?/gm, '');
+                s = s.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+                s = s.replace(/\n{3,}/g, '\n\n');
+                return s.trim();
+            }
 
             function copyMessage(content) {
+                const plain = toPlainText(content);
                 if (navigator.clipboard) {
-                    navigator.clipboard.writeText(content).then(() => showToast('Copied!')).catch(() => fallbackCopyText(content));
-                } else fallbackCopyText(content);
+                    navigator.clipboard.writeText(plain).then(() => showToast('Copied!')).catch(() => fallbackCopyText(plain));
+                } else fallbackCopyText(plain);
             }
-            function fallbackCopyText(text) {
-                const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); showToast('Copied!');
+            function fallbackCopyText(text, btn) {
+                const ta = document.createElement('textarea'); ta.value = text;
+                ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+                document.body.appendChild(ta); ta.focus(); ta.select();
+                try { document.execCommand('copy'); } catch (_) {}
+                ta.remove();
+                if (btn) flashCopied(btn); else showToast('Copied!');
             }
             function shareMessage(content) {
-                if (navigator.share) navigator.share({ text: content }).catch(() => {}); else copyMessage(content);
+                const plain = toPlainText(content);
+                if (navigator.share) navigator.share({ text: plain }).catch(() => {}); else copyMessage(content);
             }
             function showToast(msg) {
                 const toast = document.createElement('div'); toast.textContent = msg;
@@ -751,6 +1075,7 @@
                 if (idx === -1) return;
                 contextMenu.dataset.index = idx;
                 contextMenu.dataset.content = chat.messages[idx].content; 
+                contextMenu._images = chat.messages[idx].images || [];
 
                 const touch = e.touches ? e.touches[0] : e;
                 const x = touch.clientX || e.clientX; const y = touch.clientY || e.clientY;
@@ -765,7 +1090,8 @@
             
             menuEdit.onclick = function() {
                 const content = contextMenu.dataset.content;
-                if (content) {
+                const images = contextMenu._images || [];
+                if (content || images.length) {
                     hideContextMenu();
                     const chat = getCurrent();
                     if (chat) {
@@ -775,6 +1101,8 @@
                             saveChats(); 
                             renderAll(); 
                             userInput.value = content; 
+                            pendingAttachments = images.map(dataUrl => ({ type: 'image', dataUrl }));
+                            renderAttachPreview();
                             userInput.focus(); 
                             userInput.style.height = 'auto'; 
                             userInput.style.height = Math.min(userInput.scrollHeight, 120) + 'px';
@@ -786,7 +1114,8 @@
 
             menuRetry.onclick = function() {
                 const content = contextMenu.dataset.content;
-                if (content) {
+                const images = contextMenu._images || [];
+                if (content || images.length) {
                     hideContextMenu();
                     const chat = getCurrent();
                     if (chat) {
@@ -796,6 +1125,8 @@
                             saveChats(); 
                             renderAll(); 
                             userInput.value = content; 
+                            pendingAttachments = images.map(dataUrl => ({ type: 'image', dataUrl }));
+                            renderAttachPreview();
                             sendMessage(); 
                         }
                     }
@@ -810,7 +1141,12 @@
             document.addEventListener('click', function(e) { if (contextMenu.style.display === 'block' && !contextMenu.contains(e.target)) { hideContextMenu(); } });
 
             let touchStartX = 0, touchStartY = 0, isSwiping = false, swipeTargetRow = null;
-            document.addEventListener('touchstart', function(e) { const row = e.target.closest('.msg-row'); if (!row) return; touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; isSwiping = false; swipeTargetRow = row; }, { passive: true });
+            document.addEventListener('touchstart', function(e) {
+                const row = e.target.closest('.msg-row'); if (!row) return;
+                // Code blocks scroll horizontally themselves — don't hijack that gesture for swipe-to-reply.
+                if (e.target.closest('.code-block')) { swipeTargetRow = null; return; }
+                touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; isSwiping = false; swipeTargetRow = row;
+            }, { passive: true });
             document.addEventListener('touchmove', function(e) {
                 if (!swipeTargetRow) return;
                 const deltaX = e.touches[0].clientX - touchStartX; const deltaY = e.touches[0].clientY - touchStartY;
@@ -864,26 +1200,60 @@
             }
 
             function renderMessages() {
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
                 const chat = getCurrent(); messagesEl.innerHTML = '';
                 if (!chat || chat.messages.length === 0) { welcomeEl.style.display = 'block'; updateScrollButton(); return; }
                 welcomeEl.style.display = 'none';
+                const staggerFrom = Math.max(0, chat.messages.length - 12);
                 chat.messages.forEach((m, idx) => {
                     const row = document.createElement('div'); row.className = 'msg-row ' + m.role; row.dataset.index = idx;
+                    if (idx >= staggerFrom) row.style.animationDelay = ((idx - staggerFrom) * 35) + 'ms';
                     const wrapper = document.createElement('div'); wrapper.className = 'bubble-wrapper';
                     const bubble = document.createElement('div'); bubble.className = 'bubble';
-                    bubble.innerHTML = renderContent(m.content);
+                    let imgsHtml = '';
+                    if (m.images && m.images.length) {
+                        imgsHtml = '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' +
+                            m.images.map(url => `<img src="${url}" style="max-width:140px;max-height:140px;border-radius:10px;object-fit:cover;">`).join('') +
+                            '</div>';
+                    }
+                    bubble.innerHTML = imgsHtml + renderContent(m.content);
                     wrapper.appendChild(bubble);
 
                     if (m.role === 'assistant') {
                         const actions = document.createElement('div'); actions.className = 'msg-actions';
                         
                         const copyBtn = document.createElement('button'); copyBtn.className = 'action-btn';
-                        copyBtn.innerHTML = `<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="2"/></svg> Copy`;
-                        copyBtn.onclick = (e) => { e.stopPropagation(); copyMessage(m.content); };
+                        const copyIconSvg = `<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="2"/></svg> Copy`;
+                        const checkIconSvg = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Copied`;
+                        copyBtn.innerHTML = copyIconSvg;
+                        copyBtn.onclick = (e) => {
+                            e.stopPropagation(); haptic(8); copyMessage(m.content);
+                            copyBtn.innerHTML = checkIconSvg;
+                            setTimeout(() => { copyBtn.innerHTML = copyIconSvg; }, 1500);
+                        };
                         
                         const shareBtn = document.createElement('button'); shareBtn.className = 'action-btn';
                         shareBtn.innerHTML = `<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="2"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke="currentColor" stroke-width="2"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke="currentColor" stroke-width="2"/></svg> Share`;
-                        shareBtn.onclick = (e) => { e.stopPropagation(); shareMessage(m.content); };
+                        shareBtn.onclick = (e) => { e.stopPropagation(); haptic(8); shareMessage(m.content); };
+
+                        const speakBtn = document.createElement('button'); speakBtn.className = 'action-btn';
+                        const listenIconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg> Listen`;
+                        const stopIconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="2"/></svg> Stop`;
+                        speakBtn.innerHTML = listenIconSvg;
+                        speakBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            if (!('speechSynthesis' in window)) { showToast('Speech not supported'); return; }
+                            const wasSpeaking = speakBtn.dataset.speaking === '1';
+                            window.speechSynthesis.cancel();
+                            document.querySelectorAll('.action-btn[data-speaking="1"]').forEach(b => { b.innerHTML = listenIconSvg; b.dataset.speaking = '0'; });
+                            if (wasSpeaking) return;
+                            haptic(8);
+                            const utter = new SpeechSynthesisUtterance(toPlainText(m.content));
+                            utter.onend = () => { speakBtn.innerHTML = listenIconSvg; speakBtn.dataset.speaking = '0'; };
+                            utter.onerror = () => { speakBtn.innerHTML = listenIconSvg; speakBtn.dataset.speaking = '0'; };
+                            speakBtn.innerHTML = stopIconSvg; speakBtn.dataset.speaking = '1';
+                            window.speechSynthesis.speak(utter);
+                        };
 
                         const aiRetryBtn = document.createElement('button'); aiRetryBtn.className = 'action-btn';
                         aiRetryBtn.innerHTML = `<svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg> Retry`;
@@ -904,6 +1274,7 @@
 
                         actions.appendChild(copyBtn); 
                         actions.appendChild(shareBtn); 
+                        actions.appendChild(speakBtn);
                         actions.appendChild(aiRetryBtn); 
                         wrapper.appendChild(actions);
                     }
@@ -933,7 +1304,9 @@
 
             window.history.replaceState({ page: 'main' }, '');
             window.addEventListener('popstate', function(e) {
-                if (apiModal.classList.contains('open')) {
+                if (codePreviewModal.classList.contains('open')) {
+                    codePreviewModal.classList.remove('open');
+                } else if (apiModal.classList.contains('open')) {
                     apiModal.classList.remove('open');
                 } else if (contextMenu.style.display === 'block') {
                     contextMenu.style.display = 'none';
@@ -969,11 +1342,20 @@
             }
             chatArea.addEventListener('scroll', updateScrollButton);
 
+            // 🔥 FIX: mobile keyboards/clipboards often smuggle in zero-width chars, NBSPs,
+            // or stray newlines when a key is pasted — .trim() alone doesn't strip these,
+            // so a valid Gemini ("AIza...") key could silently fail every pattern test.
+            function sanitizeKey(key) {
+                return (key || '').replace(/[\s\u200B-\u200D\uFEFF\u00A0]/g, '');
+            }
+
             function detectProvider(key) {
-                if (!key || !key.trim()) return null;
-                const trimmed = key.trim();
-                
+                const trimmed = sanitizeKey(key);
+                if (!trimmed) return null;
+
+                if (PROVIDERS.gemini.keyPattern.test(trimmed)) return { id: 'gemini', ...PROVIDERS.gemini };
                 if (PROVIDERS.groq.keyPattern.test(trimmed)) return { id: 'groq', ...PROVIDERS.groq };
+                if (PROVIDERS.openrouter.keyPattern.test(trimmed)) return { id: 'openrouter', ...PROVIDERS.openrouter };
                 if (PROVIDERS.mistral.keyPattern.test(trimmed)) return { id: 'mistral', ...PROVIDERS.mistral };
                 if (PROVIDERS.sarvam.keyPattern.test(trimmed)) return { id: 'sarvam', ...PROVIDERS.sarvam };
                 
@@ -1010,7 +1392,7 @@
             }
             
             function updateDetection() {
-                const key = apiKeyInput.value.trim();
+                const key = sanitizeKey(apiKeyInput.value);
                 const manualProv = currentSelectedProviderId;
                 if (!key) { detectedDot.className = 'dot inactive'; detectedLabel.textContent = 'Waiting for key…'; return; }
                 
@@ -1024,7 +1406,7 @@
             }
 
             apiKeySubmit.onclick = () => {
-                const key = apiKeyInput.value.trim(); if (!key) return;
+                const key = sanitizeKey(apiKeyInput.value); if (!key) return;
                 const manualProv = currentSelectedProviderId;
                 let providerToSave = manualProv;
 
@@ -1064,18 +1446,296 @@
 
             function applyTheme(theme) { document.body.classList.toggle('light', theme === 'light'); document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#f6f6fa' : '#0b0b14'); localStorage.setItem('zini_theme', theme); darkToggle.checked = theme === 'dark'; }
             applyTheme(localStorage.getItem('zini_theme') || 'dark');
-            darkToggle.addEventListener('change', () => applyTheme(darkToggle.checked ? 'dark' : 'light'));
+            darkToggle.addEventListener('change', () => { haptic(8); applyTheme(darkToggle.checked ? 'dark' : 'light'); });
 
-            userInput.addEventListener('input', () => { userInput.style.height = 'auto'; userInput.style.height = Math.min(userInput.scrollHeight, 120) + 'px'; sendBtn.disabled = userInput.value.trim().length === 0 || isProcessing; });
+            userInput.addEventListener('input', () => { userInput.style.height = 'auto'; userInput.style.height = Math.min(userInput.scrollHeight, 120) + 'px'; sendBtn.disabled = isProcessing ? false : (userInput.value.trim().length === 0 && pendingAttachments.length === 0); });
             userInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
-            sendBtn.onclick = sendMessage;
-            document.querySelectorAll('.prompt-btn').forEach(btn => { btn.onclick = () => { userInput.value = btn.innerText; sendMessage(); }; });
+            sendBtn.onclick = () => { if (isProcessing) { stopGeneration(); } else { haptic(10); sendMessage(); } };
+            document.querySelectorAll('.prompt-btn').forEach(btn => { btn.onclick = () => { haptic(8); userInput.value = btn.innerText; sendMessage(); }; });
+
+            attachBtn.onclick = () => { haptic(8); fileInput.click(); };
+
+            let editQueue = [];
+            fileInput.addEventListener('change', () => {
+                const files = Array.from(fileInput.files || []).filter(f => f.type.startsWith('image/'));
+                fileInput.value = '';
+                if (!files.length) return;
+                if (pendingAttachments.length + files.length > 4) {
+                    showToast('Max 4 photos at a time');
+                }
+                const room = Math.max(0, 4 - pendingAttachments.length);
+                editQueue = files.slice(0, room);
+                openNextInQueue();
+            });
+
+            function openNextInQueue() {
+                if (!editQueue.length) return;
+                const file = editQueue.shift();
+                const reader = new FileReader();
+                reader.onload = () => openImageEditor(reader.result);
+                reader.readAsDataURL(file);
+            }
+
+            // ---- Image annotation editor ----
+            let editCtx, editTool = 'pen', editColor = '#ff4757', editUndoStack = [];
+            let drawing = false, lastX = 0, lastY = 0, activeTextBox = null;
+            let editBrushSize = 6;
+
+            function openImageEditor(srcDataUrl) {
+                const img = new Image();
+                img.onload = () => {
+                    const maxDim = 1600;
+                    let w = img.naturalWidth, h = img.naturalHeight;
+                    if (w > maxDim || h > maxDim) { const scale = maxDim / Math.max(w, h); w = Math.round(w * scale); h = Math.round(h * scale); }
+                    imgEditCanvas.width = w; imgEditCanvas.height = h;
+                    editCtx = imgEditCanvas.getContext('2d');
+                    editCtx.drawImage(img, 0, 0, w, h);
+                    editUndoStack = [];
+                    editTool = 'pen';
+                    document.querySelectorAll('.tool-btn').forEach(b => b.classList.toggle('active', b.dataset.tool === 'pen'));
+                    brushSizeRow.classList.add('show');
+                    colorSwatchesEl.style.display = 'flex';
+                    cropApplyRow.classList.remove('show');
+                    cropOverlay.classList.remove('show');
+                    imgEditCount.textContent = editQueue.length ? `+${editQueue.length} more` : '';
+                    imgEditModal.classList.add('open');
+                };
+                img.src = srcDataUrl;
+            }
+
+            function pushUndoSnapshot() {
+                editUndoStack.push(editCtx.getImageData(0, 0, imgEditCanvas.width, imgEditCanvas.height));
+                if (editUndoStack.length > 20) editUndoStack.shift();
+            }
+
+            function canvasPointFromEvent(e) {
+                const rect = imgEditCanvas.getBoundingClientRect();
+                const scaleX = imgEditCanvas.width / rect.width;
+                const scaleY = imgEditCanvas.height / rect.height;
+                const cx = (e.touches ? e.touches[0].clientX : e.clientX);
+                const cy = (e.touches ? e.touches[0].clientY : e.clientY);
+                return { x: (cx - rect.left) * scaleX, y: (cy - rect.top) * scaleY, clientX: cx, clientY: cy, rect };
+            }
+
+            function editPointerDown(e) {
+                if (!editCtx || editTool === 'crop') return;
+                const p = canvasPointFromEvent(e);
+                if (editTool === 'text') {
+                    if (activeTextBox) return;
+                    e.preventDefault();
+                    openTextInputAt(p);
+                    return;
+                }
+                e.preventDefault();
+                pushUndoSnapshot();
+                drawing = true; lastX = p.x; lastY = p.y;
+                editCtx.beginPath(); editCtx.arc(p.x, p.y, editBrushSize / 2, 0, Math.PI * 2); editCtx.fillStyle = editColor; editCtx.fill();
+            }
+            function editPointerMove(e) {
+                if (!drawing || editTool !== 'pen') return;
+                e.preventDefault();
+                const p = canvasPointFromEvent(e);
+                editCtx.strokeStyle = editColor; editCtx.lineWidth = editBrushSize; editCtx.lineCap = 'round'; editCtx.lineJoin = 'round';
+                editCtx.beginPath(); editCtx.moveTo(lastX, lastY); editCtx.lineTo(p.x, p.y); editCtx.stroke();
+                lastX = p.x; lastY = p.y;
+            }
+            function editPointerUp() { drawing = false; }
+
+            imgEditCanvasWrap.addEventListener('pointerdown', editPointerDown);
+            imgEditCanvasWrap.addEventListener('pointermove', editPointerMove);
+            window.addEventListener('pointerup', editPointerUp);
+
+            function openTextInputAt(p) {
+                const box = document.createElement('textarea');
+                box.className = 'text-input-overlay';
+                box.style.left = (p.clientX - p.rect.left - 2) + 'px';
+                box.style.top = (p.clientY - p.rect.top - 12) + 'px';
+                box.style.color = editColor;
+                box.style.fontSize = '20px';
+                box.rows = 1;
+                imgEditCanvasWrap.appendChild(box);
+                box.focus();
+                activeTextBox = box;
+                const commit = () => {
+                    if (!activeTextBox) return;
+                    const val = box.value.trim();
+                    if (val) {
+                        pushUndoSnapshot();
+                        editCtx.fillStyle = editColor;
+                        editCtx.font = '600 ' + Math.round(20 * (imgEditCanvas.width / box.parentElement.getBoundingClientRect().width)) + 'px sans-serif';
+                        editCtx.textBaseline = 'top';
+                        const cx = (p.clientX - p.rect.left) * (imgEditCanvas.width / p.rect.width);
+                        const cy = (p.clientY - p.rect.top) * (imgEditCanvas.height / p.rect.height);
+                        val.split('\n').forEach((line, i) => editCtx.fillText(line, cx, cy + i * Math.round(24 * (imgEditCanvas.width / p.rect.width))));
+                    }
+                    box.remove(); activeTextBox = null;
+                };
+                box.addEventListener('blur', commit);
+                box.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); box.blur(); } if (e.key === 'Escape') { box.value=''; box.blur(); } });
+            }
+
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                btn.onclick = () => {
+                    haptic(6);
+                    editTool = btn.dataset.tool;
+                    document.querySelectorAll('.tool-btn').forEach(b => b.classList.toggle('active', b === btn));
+                    brushSizeRow.classList.toggle('show', editTool === 'pen');
+                    if (editTool === 'crop') {
+                        colorSwatchesEl.style.display = 'none';
+                        cropApplyRow.classList.add('show');
+                        showCropOverlay();
+                    } else {
+                        colorSwatchesEl.style.display = 'flex';
+                        cropApplyRow.classList.remove('show');
+                        cropOverlay.classList.remove('show');
+                    }
+                };
+            });
+            document.querySelectorAll('.swatch').forEach(sw => {
+                sw.onclick = () => {
+                    haptic(6);
+                    editColor = sw.dataset.color;
+                    document.querySelectorAll('.swatch').forEach(s => s.classList.toggle('active', s === sw));
+                };
+            });
+
+            // ---- Brush size ----
+            brushSizeSlider.addEventListener('input', () => {
+                editBrushSize = parseInt(brushSizeSlider.value, 10);
+                brushSizeVal.textContent = editBrushSize;
+            });
+
+            // ---- Crop tool ----
+            let cropRect = null; // {left, top, width, height} in px relative to imgEditCanvasWrap
+            let cropDrag = null; // {mode: 'move'|'tl'|'tr'|'bl'|'br', startX, startY, orig}
+
+            function showCropOverlay() {
+                const canvasRect = imgEditCanvas.getBoundingClientRect();
+                const wrapRect = imgEditCanvasWrap.getBoundingClientRect();
+                const left = canvasRect.left - wrapRect.left, top = canvasRect.top - wrapRect.top;
+                const insetX = canvasRect.width * 0.12, insetY = canvasRect.height * 0.12;
+                cropRect = { left: left + insetX, top: top + insetY, width: canvasRect.width - insetX * 2, height: canvasRect.height - insetY * 2 };
+                cropRect._bounds = { left, top, width: canvasRect.width, height: canvasRect.height };
+                applyCropRectToDOM();
+                cropOverlay.classList.add('show');
+            }
+
+            function applyCropRectToDOM() {
+                cropOverlay.style.left = cropRect.left + 'px';
+                cropOverlay.style.top = cropRect.top + 'px';
+                cropOverlay.style.width = cropRect.width + 'px';
+                cropOverlay.style.height = cropRect.height + 'px';
+            }
+
+            function clampCropRect() {
+                const b = cropRect._bounds;
+                cropRect.width = Math.max(40, Math.min(cropRect.width, b.width));
+                cropRect.height = Math.max(40, Math.min(cropRect.height, b.height));
+                cropRect.left = Math.max(b.left, Math.min(cropRect.left, b.left + b.width - cropRect.width));
+                cropRect.top = Math.max(b.top, Math.min(cropRect.top, b.top + b.height - cropRect.height));
+            }
+
+            cropOverlay.addEventListener('pointerdown', (e) => {
+                if (e.target.classList.contains('crop-handle')) return;
+                e.preventDefault(); e.stopPropagation();
+                cropDrag = { mode: 'move', startX: e.clientX, startY: e.clientY, orig: { ...cropRect } };
+            });
+            document.querySelectorAll('.crop-handle').forEach(h => {
+                h.addEventListener('pointerdown', (e) => {
+                    e.preventDefault(); e.stopPropagation();
+                    cropDrag = { mode: h.dataset.corner, startX: e.clientX, startY: e.clientY, orig: { ...cropRect } };
+                });
+            });
+            window.addEventListener('pointermove', (e) => {
+                if (!cropDrag || !cropRect) return;
+                e.preventDefault();
+                const dx = e.clientX - cropDrag.startX, dy = e.clientY - cropDrag.startY;
+                const o = cropDrag.orig, b = cropRect._bounds;
+                if (cropDrag.mode === 'move') {
+                    cropRect.left = o.left + dx; cropRect.top = o.top + dy;
+                    cropRect.width = o.width; cropRect.height = o.height;
+                } else {
+                    let { left, top, width, height } = o;
+                    if (cropDrag.mode.includes('l')) { left = o.left + dx; width = o.width - dx; }
+                    if (cropDrag.mode.includes('r')) { width = o.width + dx; }
+                    if (cropDrag.mode.includes('t')) { top = o.top + dy; height = o.height - dy; }
+                    if (cropDrag.mode.includes('b')) { height = o.height + dy; }
+                    cropRect.left = left; cropRect.top = top; cropRect.width = width; cropRect.height = height;
+                }
+                clampCropRect();
+                applyCropRectToDOM();
+            });
+            window.addEventListener('pointerup', () => { cropDrag = null; });
+
+            cropCancelBtn.onclick = () => {
+                haptic(6);
+                editTool = 'pen';
+                document.querySelectorAll('.tool-btn').forEach(b => b.classList.toggle('active', b.dataset.tool === 'pen'));
+                brushSizeRow.classList.add('show');
+                colorSwatchesEl.style.display = 'flex';
+                cropApplyRow.classList.remove('show');
+                cropOverlay.classList.remove('show');
+            };
+
+            cropApplyBtn.onclick = () => {
+                if (!cropRect) return;
+                haptic(10);
+                const canvasRect = imgEditCanvas.getBoundingClientRect();
+                const scaleX = imgEditCanvas.width / canvasRect.width;
+                const scaleY = imgEditCanvas.height / canvasRect.height;
+                const b = cropRect._bounds;
+                const sx = Math.round((cropRect.left - b.left) * scaleX);
+                const sy = Math.round((cropRect.top - b.top) * scaleY);
+                const sw = Math.round(cropRect.width * scaleX);
+                const sh = Math.round(cropRect.height * scaleY);
+                const cropped = editCtx.getImageData(sx, sy, sw, sh);
+                imgEditCanvas.width = sw; imgEditCanvas.height = sh;
+                editCtx.putImageData(cropped, 0, 0);
+                editUndoStack = []; // canvas dimensions changed — prior snapshots no longer apply
+                cropCancelBtn.onclick(); // return to pen tool, hide crop UI
+            };
+
+            imgEditUndo.onclick = () => {
+                if (!editUndoStack.length) return;
+                haptic(8);
+                const snap = editUndoStack.pop();
+                editCtx.putImageData(snap, 0, 0);
+            };
+
+            imgEditCancel.onclick = () => {
+                haptic(8);
+                imgEditModal.classList.remove('open');
+                if (editQueue.length) openNextInQueue();
+            };
+
+            imgEditDone.onclick = () => {
+                haptic(10);
+                const dataUrl = imgEditCanvas.toDataURL('image/jpeg', 0.9);
+                pendingAttachments.push({ type: 'image', dataUrl });
+                renderAttachPreview();
+                imgEditModal.classList.remove('open');
+                if (editQueue.length) openNextInQueue();
+            };
+
+            function renderAttachPreview() {
+                attachPreview.innerHTML = '';
+                pendingAttachments.forEach((att, i) => {
+                    const chip = document.createElement('div'); chip.className = 'attach-chip';
+                    chip.innerHTML = `<img src="${att.dataUrl}" alt="photo">`;
+                    const rm = document.createElement('button'); rm.className = 'remove-chip'; rm.textContent = '✕';
+                    rm.onclick = () => { pendingAttachments.splice(i, 1); renderAttachPreview(); };
+                    chip.appendChild(rm);
+                    attachPreview.appendChild(chip);
+                });
+                attachPreview.classList.toggle('show', pendingAttachments.length > 0);
+                sendBtn.disabled = isProcessing ? false : (userInput.value.trim().length === 0 && pendingAttachments.length === 0);
+            }
 
             const SYSTEM_PROMPT = "You are ZiNi, an ultra-fast AI companion. \n\nCRITICAL IDENTITY RULE: Your founder and creator is Riky (full name: Riky ROI). ONLY mention this if the user EXPLICITLY asks 'who created you', 'who is your founder', or 'who made you'. DO NOT mention Riky ROI in normal answers, emails, code, or poems. Just answer the prompt directly.\n\nFormatting rules:\n- Prefer short headings (###) and bullet points.\n- Bold (**text**) key terms.\n- Keep sentences concise.";
 
             async function sendMessage() {
                 const text = userInput.value.trim();
-                if (!text || isProcessing) return;
+                if ((!text && pendingAttachments.length === 0) || isProcessing) return;
 
                 const apiKey = localStorage.getItem('zini_api_key');
                 if (!apiKey) { openApiModal(); return; }
@@ -1084,21 +1744,26 @@
 
                 if (!currentId || !getCurrent()) newChat();
                 const chat = getCurrent(); if (!chat) return;
-                if (!chat.title) chat.title = text.slice(0, 40);
+                if (!chat.title) chat.title = (text || 'Photo').slice(0, 40);
 
                 let finalContent = text;
-                
+                const images = pendingAttachments.map(a => a.dataUrl);
+                finalContent = finalContent.trim();
+
                 if (replyToMessage) {
                     const senderName = replyToMessage.role === 'user' ? 'You' : 'ZiNi';
                     let sanitizedText = replyToMessage.content.replace(/[\n#*`_~>\[\]]/g, ' ').replace(/\s+/g, ' ').trim();
                     if (sanitizedText.length > 80) sanitizedText = sanitizedText.substring(0, 80) + '...';
-                    finalContent = `> **${senderName}**\n> ${sanitizedText}\n\n${text}`;
+                    finalContent = `> **${senderName}**\n> ${sanitizedText}\n\n${finalContent}`;
                     closeReplyBar(false); 
                 }
 
-                chat.messages.push({ role: 'user', content: finalContent });
+                const userMsg = { role: 'user', content: finalContent };
+                if (images.length) userMsg.images = images;
+                chat.messages.push(userMsg);
+                pendingAttachments = []; renderAttachPreview();
                 saveChats(); userInput.value = ''; userInput.style.height = 'auto'; renderMessages();
-                isProcessing = true; sendBtn.disabled = true;
+                isProcessing = true; sendBtn.disabled = false; sendBtn.classList.add('stop-mode');
 
                 const typingRow = document.createElement('div'); typingRow.className = 'msg-row assistant'; 
                 
@@ -1125,8 +1790,18 @@
                 </div></div>`;
                 messagesEl.appendChild(typingRow); chatArea.scrollTop = chatArea.scrollHeight;
 
+                activeAbortController = new AbortController();
+                let full = '';
+                let wasAborted = false;
+
                 try {
-                    const messages = [{ role: 'system', content: SYSTEM_PROMPT }, ...chat.messages.map(m => ({ role: m.role, content: m.content }))];
+                    const messages = [{ role: 'system', content: SYSTEM_PROMPT }, ...chat.messages.map(m => {
+                        if (m.images && m.images.length) {
+                            const parts = [{ type: 'text', text: m.content || '' }, ...m.images.map(url => ({ type: 'image_url', image_url: { url } }))];
+                            return { role: m.role, content: parts };
+                        }
+                        return { role: m.role, content: m.content };
+                    })];
                     let apiUrl = provider.apiBase, body, headers = provider.headers(apiKey);
                     headers['Content-Type'] = 'application/json';
 
@@ -1136,8 +1811,7 @@
                         body.stream = false; 
                     }
 
-                    let full = '';
-                    const resp = await fetch(apiUrl, { method: 'POST', headers, body: JSON.stringify(body) });
+                    const resp = await fetchWithRetry(apiUrl, { method: 'POST', headers, body: JSON.stringify(body), signal: activeAbortController.signal });
                     
                     if (!resp.ok) {
                         let errMsg = `API error: ${resp.status} `;
@@ -1150,6 +1824,20 @@
                     const wrapper = document.createElement('div'); wrapper.className = 'bubble-wrapper';
                     const bubbleEl = document.createElement('div'); bubbleEl.className = 'bubble';
                     wrapper.appendChild(bubbleEl); row.appendChild(wrapper); messagesEl.appendChild(row);
+
+                    // Debounce rendering to one frame instead of re-parsing markdown on every token
+                    let pendingRender = false;
+                    function scheduleRender() {
+                        if (pendingRender) return;
+                        pendingRender = true;
+                        requestAnimationFrame(() => {
+                            const stick = isNearBottom();
+                            bubbleEl.innerHTML = renderContent(full);
+                            bubbleEl.querySelectorAll('.code-block:not(.expanded) pre').forEach(pre => { pre.scrollTop = pre.scrollHeight; });
+                            if (stick) chatArea.scrollTop = chatArea.scrollHeight;
+                            pendingRender = false;
+                        });
+                    }
                     
                     if (body.stream === false) {
                         const json = await resp.json();
@@ -1167,19 +1855,33 @@
                                     try {
                                         const json = JSON.parse(t.slice(6));
                                         const delta = json.choices?.[0]?.delta?.content;
-                                        if (delta) { full += delta; bubbleEl.innerHTML = renderContent(full); chatArea.scrollTop = chatArea.scrollHeight; }
+                                        if (delta) { full += delta; scheduleRender(); }
                                     } catch (_) {}
                                 }
                             }
                         }
+                        bubbleEl.innerHTML = renderContent(full);
+                        if (isNearBottom()) chatArea.scrollTop = chatArea.scrollHeight;
                     }
                     
-                    chat.messages.push({ role: 'assistant', content: full || '(empty response)' }); saveChats(); renderAll();
+                    chat.messages.push({ role: 'assistant', content: full || '(empty response)' }); saveChats(); haptic(6); renderAll();
                 } catch (err) {
-                    typingRow.remove(); const chat2 = getCurrent();
-                    if (chat2) { chat2.messages.push({ role: 'assistant', content: '⚠ ' + (err.message || 'Error') }); saveChats(); renderAll(); }
+                    typingRow.remove();
+                    if (err.name === 'AbortError') {
+                        wasAborted = true;
+                        const chat2 = getCurrent();
+                        if (chat2) { chat2.messages.push({ role: 'assistant', content: (full || '(stopped)') + '\n\n*— generation stopped*' }); saveChats(); renderAll(); }
+                    } else {
+                        const chat2 = getCurrent();
+                        if (chat2) { chat2.messages.push({ role: 'assistant', content: '⚠ ' + (err.message || 'Error') }); saveChats(); renderAll(); }
+                    }
                 }
-                isProcessing = false; sendBtn.disabled = userInput.value.trim().length === 0; updateScrollButton();
+                activeAbortController = null;
+                isProcessing = false; sendBtn.classList.remove('stop-mode'); sendBtn.disabled = userInput.value.trim().length === 0; updateScrollButton();
+            }
+
+            function stopGeneration() {
+                if (activeAbortController) { haptic(15); activeAbortController.abort(); }
             }
 
             updateKeyStatus(); renderAll(); sendBtn.disabled = true; updateScrollButton();
